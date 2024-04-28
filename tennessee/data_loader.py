@@ -3,32 +3,31 @@ import torchvision
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import math
+import pandas as pd
+import os
+from skimage import io
 
 
-class WineDataset(Dataset):
+class persistence_images_dataset(Dataset):
 
-    def __init_(self):
+    def __init__(self,csv_file,root_dir,transform=None):
+        self.annotations = pd.read_csv(csv_file)
+        self.root_dir = root_dir
+        self.transform = transform
 
-        xy = np.loadtxt('./data/wine.csv', delimiter=',', dtype=np.float32, skiprows=1)
-        self.n_samples = xy.shape[0]
-
-
-        self.x_data = torch.from_numpy(xy[:, 1:])
-        self.y_data = torch.from_numpy(xy[:, [0]])
-
-
-    def __getitem__(self, index):
-        return self.x_data[index], self.y_data[index]
-    
     def __len__(self):
-        return self.n_samples
+        return len(self.annotations)
     
+    def __getitem__(self,index):
+        img_path = os.path.join(self.root_dir, self.annotations.iloc[index, 0])
+        image = io.imread(img_path)
+        y_label = torch.tensor(self.annotations.iloc[index, 1])
+
+        if self.transform:
+            image = self.transform(image)
+
+        return (image, y_label)
 
 
-# create dataset
-dataset = WineDataset()
 
-# get first sample and unpack
-first_data = dataset[0]
-# features, labels = first_data
-# print(features, labels)
+
