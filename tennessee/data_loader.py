@@ -7,7 +7,7 @@ import pandas as pd
 import os
 from skimage import io
 import geopandas as gpd
-
+import matplotlib.pyplot as plt
 
 class persistence_images_dataset(Dataset):
 
@@ -23,9 +23,10 @@ class persistence_images_dataset(Dataset):
         # Collect paths of all images in each variable name folder
         for variable_name in self.variable_names:
             variable_folder = os.path.join(root_dir, variable_name)
-            #image_names = os.listdir(variable_folder)
-            image_names = [f for f in os.listdir(variable_folder) 
-                       if os.path.isdir(os.path.join(variable_folder, f)) and not f.startswith('.')]
+            # image_names = os.listdir(variable_folder)
+            image_names = [f for f in os.listdir(variable_folder) if not f.startswith('.')]
+            # image_names = [f for f in os.listdir(variable_folder) 
+                    #    if os.path.isdir(os.path.join(variable_folder, f)) and not f.startswith('.')]
             for image_name in image_names:
                 image_path = os.path.join(variable_folder, image_name)
                 self.image_paths[variable_name].append(image_path)
@@ -34,26 +35,24 @@ class persistence_images_dataset(Dataset):
         return sum(len(paths) for paths in self.image_paths.values())
     
     def __getitem__(self,index):
-        # img_path = os.path.join(self.root_dir, self.annotations.iloc[index, 0])
-        # image = io.imread(img_path)
-        # y_label = torch.tensor(self.annotations.iloc[index, 1])
 
-        # if self.transform:
-        #     image = self.transform(image)
+        temp_dict = {}
 
-        # return (image, y_label)
-         # Get the variable name and index within the variable name folder
         for variable_name, paths in self.image_paths.items():
-            if index < 60000:
-                image_path = paths[1]
+            if index < 95:
+                image_path = paths[index]
                 image = io.imread(image_path)
 
                 if self.transform:
                     image = self.transform(image)
-                return (image, variable_name)
 
-        else:
-            raise IndexError('Index out of bounds')
+                #store variable name and image in a dictionary
+                temp_dict[variable_name] = image
+
+            else:
+                raise IndexError('Index out of bounds')
+        
+        return temp_dict
 
 
 
@@ -62,7 +61,17 @@ custom_dataset = persistence_images_dataset(geo_file_path='/Users/h6x/ORNL/git/o
     root_dir='/Users/h6x/ORNL/git/opioid-risk-modeling/tennessee/results/persistence images/H0H1')
 
 
-sample = custom_dataset[47001]
+single_observation = custom_dataset[94]
 
-# The 'sample' variable now contains the image and its corresponding variable name
-# image, variable_name = sample
+# create figure for 5 subplots
+fig, axs = plt.subplots(1, 5, figsize=(20, 5))
+
+for i, (key, value) in enumerate(single_observation.items()):
+    print(f'{key}: {value.shape}')
+
+    # plot the images
+    axs[i].imshow(value)
+    axs[i].set_title(key)
+    axs[i].axis('off')
+
+plt.show()
