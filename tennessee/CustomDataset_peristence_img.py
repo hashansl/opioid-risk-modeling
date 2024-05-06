@@ -23,7 +23,7 @@ class data_loader_persistence_img(Dataset):
 
 
         # dictionary to store image paths for each variable name
-        self.image_paths = {variable_name: [] for variable_name in self.variable_names}
+        # self.image_paths = {variable_name: [] for variable_name in self.variable_names}
         
 
         # # Collect paths of all images in each variable name folder
@@ -74,9 +74,9 @@ class data_loader_persistence_img(Dataset):
 
 
 
-# Create custom dataset
-custom_dataset = data_loader_persistence_img(geo_file_path='/Users/h6x/ORNL/git/opioid-risk-modeling/tennessee/data/processed data/SVI with HepVu census tracts/SVI2018 TN census tracts with death rate HepVu/SVI2018_TN_census_tracts_with_death_rate_HepVu.shp',
-    root_dir='/Users/h6x/ORNL/git/opioid-risk-modeling/tennessee/results/persistence images/H0H1')
+# # Create custom dataset
+# custom_dataset = data_loader_persistence_img(geo_file_path='/Users/h6x/ORNL/git/opioid-risk-modeling/tennessee/data/processed data/SVI with HepVu census tracts/SVI2018 TN census tracts with death rate HepVu/SVI2018_TN_census_tracts_with_death_rate_HepVu.shp',
+#     root_dir='/Users/h6x/ORNL/git/opioid-risk-modeling/tennessee/results/persistence images/percentiles/H0H1/EP_POV')
 
 
 #single_observation = custom_dataset[94]
