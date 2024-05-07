@@ -33,9 +33,3 @@ class data_loader_persistence_img(Dataset):
 
         return (img, y_label)
         
-
-custom_dataset = data_loader_persistence_img(geo_file_path='/Users/h6x/ORNL/git/opioid-risk-modeling/tennessee/data/processed data/SVI2018 TN counties with death rate HepVu/SVI2018_TN_counties_with_death_rate_HepVu.shp',
-    root_dir='/Users/h6x/ORNL/git/opioid-risk-modeling/tennessee/results/persistence images/percentiles/H0H1/EP_POV')
-
-# get the length of the dataset
-print(len(custom_dataset))
